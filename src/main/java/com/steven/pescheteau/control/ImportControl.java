@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -103,7 +104,8 @@ public class ImportControl implements ActionListener{
             GridBagConstraints gbc = new GridBagConstraints();
             gbc.gridx = 0;
             gbc.gridy = GridBagConstraints.RELATIVE;
-            panel.add(new JLabel("Please wait, the import is underway..."), gbc);
+            final JLabel labelImport = new JLabel("Please wait, the import is underway...");
+            panel.add(labelImport, gbc);
             panel.add(svgCanvas, gbc);
 
             display.getContentPane().removeAll();
@@ -145,6 +147,7 @@ public class ImportControl implements ActionListener{
                         Supplier currentSupplier = null;
 
                         do {
+                            labelImport.setText("Please wait, the import is underway... (" + row.getRowNum() + "/" + lastRowNum + ")");
                             final Row finalRow = row;
                             row = sheet.getRow(finalRow.getRowNum() + 1);
 
@@ -200,45 +203,51 @@ public class ImportControl implements ActionListener{
                                 Road.deleteRoads(currentSupplier, Integer.parseInt((String) finalYear));
                             }
 
+                            for (int i = 35; i <= 40; i++){
+                                if (finalRow.getCell(i) != null &&
+                                        finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_BLANK){
 
-                            new Thread(){
-                                @Override
-                                public void run(){
-                                    for (int i = 35; i <= 40; i++){
-                                        if (finalRow.getCell(i) != null &&
-                                                finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_BLANK){
-
-                                            if (finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_NUMERIC){
-                                                LOG.error("Price " + finalRow.getCell(i).getStringCellValue() + " at cell "
-                                                        + column(i + 1) + (finalRow.getRowNum() + 1)
-                                                        + " has been ignored.");
-                                                continue;
-                                            }
-                                            // We have found correct prices !
-                                            String startDate = finalRow.getCell(0).getStringCellValue();
-                                            String expiryDate = finalRow.getCell(1).getStringCellValue();
-                                            Supplier supplier = Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue());
-                                            City city = City.getCities().get(finalRow.getCell(3).getStringCellValue());
-                                            String shipperName = finalRow.getCell(4).getStringCellValue();
-                                            Country country = Country.getCountries().get(finalRow.getCell(5).getStringCellValue());
-                                            Zone zone = Zone.getZones().get(zoneName);
-                                            String currency = finalRow.getCell(7).getStringCellValue();
-                                            double price = finalRow.getCell(i).getNumericCellValue();
-                                            Truck truck = Truck.getTrucks().get(sheet.getRow(4).getCell(i).getStringCellValue());
-
-                                            int numberTruck = -1;
-                                            if (finalRow.getCell(i + 7) != null &&
-                                                    finalRow.getCell(i + 7).getCellType() != Cell.CELL_TYPE_BLANK)
-                                                numberTruck = (int) finalRow.getCell(i + 7).getNumericCellValue();
-
-                                            // Now we can insert it !
-                                            Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
-                                                    country, zone, truck, price, numberTruck, Integer.parseInt((String) finalYear));
-                                            road.insert();
-                                        }
+                                    if (finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_NUMERIC){
+                                        LOG.error("Price " + finalRow.getCell(i).getStringCellValue() + " at cell "
+                                                + column(i + 1) + (finalRow.getRowNum() + 1)
+                                                + " has been ignored.");
+                                        continue;
                                     }
+                                    // We have found correct prices !
+                                    String startDate;
+                                    try {
+                                        startDate = new SimpleDateFormat("dd-MM-yyyy").format(finalRow.getCell(0).getDateCellValue());
+                                    } catch(Exception e) {
+                                        startDate = String.valueOf(finalRow.getCell(0).getStringCellValue());
+                                    }
+
+                                    String expiryDate;
+                                    try {
+                                        expiryDate = new SimpleDateFormat("dd-MM-yyyy").format(finalRow.getCell(1).getDateCellValue());
+                                    } catch(Exception e) {
+                                        expiryDate = String.valueOf(finalRow.getCell(1).getStringCellValue());
+                                    }
+
+                                    Supplier supplier = Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue());
+                                    City city = City.getCities().get(finalRow.getCell(3).getStringCellValue());
+                                    String shipperName = finalRow.getCell(4).getStringCellValue();
+                                    Country country = Country.getCountries().get(finalRow.getCell(5).getStringCellValue());
+                                    Zone zone = Zone.getZones().get(zoneName);
+                                    String currency = finalRow.getCell(7).getStringCellValue();
+                                    double price = finalRow.getCell(i).getNumericCellValue();
+                                    Truck truck = Truck.getTrucks().get(sheet.getRow(4).getCell(i).getStringCellValue());
+
+                                    int numberTruck = -1;
+                                    if (finalRow.getCell(i + 7) != null &&
+                                            finalRow.getCell(i + 7).getCellType() != Cell.CELL_TYPE_BLANK)
+                                        numberTruck = (int) finalRow.getCell(i + 7).getNumericCellValue();
+
+                                    // Now we can insert it !
+                                    Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
+                                            country, zone, truck, price, numberTruck, Integer.parseInt((String) finalYear));
+                                    road.insert();
                                 }
-                            }.start();
+                            }
 
                         } while(row != null && row.getRowNum() <= lastRowNum);
 
