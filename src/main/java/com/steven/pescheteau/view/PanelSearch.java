@@ -16,118 +16,146 @@ public class PanelSearch extends JPanel {
 
     Logger LOG = LoggerFactory.getLogger(PanelSearch.class);
     private JTabbedPane tab;
-    private JComboBox<Object> shipperCity;
-    private JComboBox<Object> shipToCountry;
-    private JComboBox<Object> shipToZone;
-    private JComboBox<Object> truckType;
-    private JComboBox<Object> supplier;
-    private JComboBox<Object> year;
+    private JList<Object> shipperCity;
+    private JList<Object> shipToCountry;
+    private JList<Object> shipToZone;
+    private JList<Object> truckType;
+    private JList<Object> supplier;
+    private JList<Object> year;
 
     public PanelSearch(JTabbedPane tab) {
-        super();
+        super(new BorderLayout());
         this.tab = tab;
 
         // Recherches possibles
-        shipperCity = new JComboBox<Object>();
-        shipToCountry = new JComboBox<Object>();
-        shipToZone = new JComboBox<Object>();
-        truckType = new JComboBox<Object>();
-        supplier = new JComboBox<Object>();
-        year = new JComboBox<Object>();
-        majData();
+        shipperCity = new JList<Object>();
+        shipToCountry = new JList<Object>();
+        shipToZone = new JList<Object>();
+        truckType = new JList<Object>();
+        supplier = new JList<Object>();
+        year = new JList<Object>();
 
-        shipperCity.setPreferredSize(new Dimension(200, 25));
-        shipToCountry.setPreferredSize(new Dimension(200, 25));
-        shipToZone.setPreferredSize(new Dimension(200, 25));
-        truckType.setPreferredSize(new Dimension(200, 25));
-        supplier.setPreferredSize(new Dimension(200, 25));
-        year.setPreferredSize(new Dimension(200, 25));
+        shipperCity.setLayoutOrientation(JList.VERTICAL);
+        shipToCountry.setLayoutOrientation(JList.VERTICAL);
+        shipToZone.setLayoutOrientation(JList.VERTICAL);
+        truckType.setLayoutOrientation(JList.VERTICAL);
+        supplier.setLayoutOrientation(JList.VERTICAL);
+        year.setLayoutOrientation(JList.VERTICAL);
 
+        JScrollPane shipperCityScroll = new JScrollPane(shipperCity);
+        JScrollPane shipToCountryScroll = new JScrollPane(shipToCountry);
+        JScrollPane shipToZoneScroll = new JScrollPane(shipToZone);
+        JScrollPane truckTypeScroll = new JScrollPane(truckType);
+        JScrollPane supplierScroll = new JScrollPane(supplier);
+        JScrollPane yearScroll = new JScrollPane(year);
+
+        shipperCityScroll.setPreferredSize(new Dimension(200, 100));
+        shipToCountryScroll.setPreferredSize(new Dimension(200, 100));
+        shipToZoneScroll.setPreferredSize(new Dimension(200, 100));
+        truckTypeScroll.setPreferredSize(new Dimension(200, 100));
+        supplierScroll.setPreferredSize(new Dimension(200, 100));
+        yearScroll.setPreferredSize(new Dimension(200, 100));
+
+        JPanel panelSearch = new JPanel();
         JLabel label = new JLabel("Shipper City");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         JPanel panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(shipperCity);
+        panel.add(shipperCityScroll);
         label = new JLabel("Ship to Country");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(shipToCountry);
+        panel.add(shipToCountryScroll);
         label = new JLabel("Ship to Zone");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(shipToZone);
+        panel.add(shipToZoneScroll);
         label = new JLabel("Truck's Type");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(truckType);
+        panel.add(truckTypeScroll);
         label = new JLabel("Supplier");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(supplier);
+        panel.add(supplierScroll);
         label = new JLabel("Year");
         label.setPreferredSize(new Dimension(100, 25));
         label.setHorizontalAlignment(JLabel.RIGHT);
         panel = new JPanel();
-        add(panel);
+        panelSearch.add(panel);
         panel.add(label);
-        panel.add(year);
+        panel.add(yearScroll);
 
         JButton button = new JButton("Search");
         button.setPreferredSize(new Dimension(250, 30));
         button.addActionListener(new SearchControl(this));
 
-        add(button);
+        panelSearch.add(button);
+
+        add(panelSearch, BorderLayout.CENTER);
+        JLabel tips = new JLabel("<html>Tips : <i>Hold down the CTRL key to select multiple lines per list</i></html>");
+        tips.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
+        tips.setHorizontalAlignment(JLabel.CENTER);
+        add(tips, BorderLayout.SOUTH);
+
+        majData();
     }
 
     public JTabbedPane getTab() {
         return tab;
     }
 
-    public JComboBox<Object> getShipperCity() {
+    public JList<Object> getShipperCity() {
         return shipperCity;
     }
 
-    public JComboBox<Object> getShipToZone() {
+    public JList<Object> getShipToZone() {
         return shipToZone;
     }
 
-    public JComboBox<Object> getShipToCountry() {
+    public JList<Object> getShipToCountry() {
         return shipToCountry;
     }
 
-    public JComboBox<Object> getTruckType() {
+    public JList<Object> getTruckType() {
         return truckType;
     }
 
-    public JComboBox<Object> getSupplier() {
+    public JList<Object> getSupplier() {
         return supplier;
     }
 
-    public JComboBox<Object> getYear() {
+    public JList<Object> getYear() {
         return year;
     }
 
     public void majData() {
-        shipperCity.setModel(new DefaultComboBoxModel(DataCharger.getCities()));
-        shipToCountry.setModel(new DefaultComboBoxModel(DataCharger.getCountries()));
-        shipToZone.setModel(new DefaultComboBoxModel(DataCharger.getZones()));
-        truckType.setModel(new DefaultComboBoxModel(DataCharger.getTrucks()));
-        supplier.setModel(new DefaultComboBoxModel(DataCharger.getSuppliers()));
-        year.setModel(new DefaultComboBoxModel(DataCharger.getYears()));
-        year.setSelectedIndex(2);
+        shipperCity.setListData(DataCharger.getCities());
+        shipToCountry.setListData(DataCharger.getCountries());
+        shipToZone.setListData(DataCharger.getZones());
+        truckType.setListData(DataCharger.getTrucks());
+        supplier.setListData(DataCharger.getSuppliers());
+        year.setListData(DataCharger.getYears());
+
+        shipperCity.setSelectedIndices(new int[] { });
+        shipToCountry.setSelectedIndices(new int[] { });
+        shipToZone.setSelectedIndices(new int[] { });
+        truckType.setSelectedIndices(new int[] { });
+        supplier.setSelectedIndices(new int[] { });
+        year.setSelectedIndices(new int[] { 1 });
     }
 }
