@@ -15,13 +15,11 @@ public class SettingsControl implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         final SettingsDialog view = new SettingsDialog();
         view.getFirstLineExcel().setValue(Settings.FIRST_LINE());
-        view.getNumberRowSupplier().setValue(Settings.ROWS_PER_SUPPLIER());
         view.getNumberRowResult().setValue(Settings.NUMBER_LINES_RESULT());
 
         view.getOk().addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 Settings.setFIRST_LINE((int) view.getFirstLineExcel().getValue());
-                Settings.setROWS_PER_SUPPLIER((int) view.getNumberRowSupplier().getValue());
                 Settings.setNUMBER_LINES_RESULT((int) view.getNumberRowResult().getValue());
                 view.dispose();
             }

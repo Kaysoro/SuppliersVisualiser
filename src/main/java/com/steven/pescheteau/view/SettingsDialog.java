@@ -12,14 +12,13 @@ public class SettingsDialog  extends JDialog {
 
     private static final long serialVersionUID = 1L;
     private JFormattedTextField firstLineExcel;
-    private JFormattedTextField numberRowSupplier;
     private JFormattedTextField numberRowResult;
     private JButton ok;
     private JButton cancel;
 
     public SettingsDialog() {
         super();
-        setSize(new Dimension(400, 170));
+        setSize(new Dimension(400, 140));
         setLocationRelativeTo(null);
         setAlwaysOnTop(false);
         setResizable(false);
@@ -38,14 +37,11 @@ public class SettingsDialog  extends JDialog {
         formatter.setCommitsOnValidEdit(true);
 
         firstLineExcel = new JFormattedTextField(formatter);
-        numberRowSupplier = new JFormattedTextField(formatter);
         numberRowResult = new JFormattedTextField(formatter);
 
-        JPanel datas = new JPanel(new GridLayout(3, 2, 5, 5));
+        JPanel datas = new JPanel(new GridLayout(2, 2, 5, 5));
         datas.add(new JLabel("First Row Data in XLSX file"));
         datas.add(firstLineExcel);
-        datas.add(new JLabel("Row Number per Supplier in XLSX"));
-        datas.add(numberRowSupplier);
         datas.add(new JLabel("Row Number for Results of Search"));
         datas.add(numberRowResult);
 
@@ -63,10 +59,6 @@ public class SettingsDialog  extends JDialog {
 
     public JFormattedTextField getFirstLineExcel() {
         return firstLineExcel;
-    }
-
-    public JFormattedTextField getNumberRowSupplier() {
-        return numberRowSupplier;
     }
 
     public JFormattedTextField getNumberRowResult() {

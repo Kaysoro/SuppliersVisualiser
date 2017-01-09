@@ -132,16 +132,6 @@ public class ImportControl implements ActionListener{
                         int lastRowNum = sheet.getLastRowNum();
                         LOG.info("Import of " + lastRowNum + " rows succeded");
 
-                        if ((lastRowNum - Settings.FIRST_LINE()) % Settings.ROWS_PER_SUPPLIER() != 0) {
-                            JOptionPane.showMessageDialog(display,
-                                    "Import have failed : the number of rows per supplier ("
-                                            + Settings.ROWS_PER_SUPPLIER()
-                                            + ")\ndoes not correspond to the document.",
-                                    "Import error",
-                                    JOptionPane.ERROR_MESSAGE);
-                            return null;
-                        }
-
                         // First iteration : we insert all new data from type trucks
                         Row row = sheet.getRow(4);
                         for (int i = 35; i <= 40; i++)
