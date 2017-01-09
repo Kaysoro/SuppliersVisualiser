@@ -12,14 +12,12 @@ public class DataCharger {
     public static Object[] getCities(){
         List<String> list =  new ArrayList<String>(City.getCities().keySet());
         Collections.sort(list);
-        list.add(0, "All");
         return list.toArray();
     }
 
     public static Object[] getCountries(){
         List<String> list =  new ArrayList<String>(Country.getCountries().keySet());
         Collections.sort(list);
-        list.add(0, "All");
         return list.toArray();
     }
 
@@ -33,21 +31,18 @@ public class DataCharger {
                 return o1.compareTo(o2);
             }
         });
-        list.add(0, "All");
         return list.toArray();
     }
 
     public static Object[] getTrucks(){
         List<String> list =  new ArrayList<String>(Truck.getTrucks().keySet());
         Collections.sort(list);
-        list.add(0, "All");
         return list.toArray();
     }
 
     public static Object[] getSuppliers(){
         List<String> list =  new ArrayList<String>(Supplier.getSuppliers().keySet());
         Collections.sort(list);
-        list.add(0, "All");
         return list.toArray();
     }
 
@@ -62,7 +57,6 @@ public class DataCharger {
                 return Integer.parseInt(o2) - Integer.parseInt(o1);
             }
         });
-        list.add(0, "All");
         return list.toArray();
     }
 }

@@ -28,7 +28,7 @@ public class Settings {
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(
-                    "SELECT firstLine, rowsPerSupplier, numberLinesResult FROM Settings;");
+                    "SELECT firstLine, numberLinesResult FROM Settings;");
             ResultSet resultSet = preparedStatement.executeQuery();
             resultSet.next();
             FIRST_LINE = resultSet.getInt("firstLine");
