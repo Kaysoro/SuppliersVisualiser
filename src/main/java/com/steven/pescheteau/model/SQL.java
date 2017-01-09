@@ -16,12 +16,14 @@ public class SQL {
     private StringBuilder request;
     private boolean paramed;
     private boolean whered;
+    private boolean opened;
 
     public SQL(){
         super();
         request = new StringBuilder();
         paramed = false;
         whered = false;
+        opened = false;
     }
 
     public SQL select(){
@@ -87,8 +89,23 @@ public class SQL {
         return this;
     }
 
+    public SQL parenthese(){
+        if (opened)
+            request.append(" )");
+        else
+            request.append("( ");
+        opened = !opened;
+        return this;
+    }
+
     public SQL and(){
         request.append(" AND ");
+        paramed = false;
+        return this;
+    }
+
+    public SQL or(){
+        request.append(" OR ");
         paramed = false;
         return this;
     }
