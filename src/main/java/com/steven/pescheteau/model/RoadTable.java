@@ -12,7 +12,7 @@ public class RoadTable extends AbstractTableModel{
     private List<Road> roads;
     public static final String[] header = {"#", "Start Date", "Expiry Date", "Shipper Name", "Currency", "Price",
             "#Trucks", "Spend", "Saving / Best price",
-            "Carrier", "Shipper City", "Ship to Country", "Ship to Zone", "Truck's Type", "Year" // Optional
+            "Carrier", "Shipper City", "Ship to Country", "Ship to Zone", "Truck's Type" // Optional
     };
 
     public RoadTable(List<Road> roads){
@@ -69,8 +69,6 @@ public class RoadTable extends AbstractTableModel{
                 return road.getShipToZone();
             case 13: // Truck's type
                 return road.getTruckType();
-            case 14: // Year
-                return road.getYear();
 
             default: //Should never arrive
                 return null;
@@ -95,9 +93,5 @@ public class RoadTable extends AbstractTableModel{
 
     public static String TRUCK(){
         return header[13];
-    }
-
-    public static String YEAR(){
-        return header[14];
     }
 }

@@ -21,7 +21,6 @@ public class PanelSearch extends JPanel {
     private JList<Object> shipToZone;
     private JList<Object> truckType;
     private JList<Object> supplier;
-    private JList<Object> year;
 
     public PanelSearch(JTabbedPane tab) {
         super(new BorderLayout());
@@ -33,28 +32,24 @@ public class PanelSearch extends JPanel {
         shipToZone = new JList<Object>();
         truckType = new JList<Object>();
         supplier = new JList<Object>();
-        year = new JList<Object>();
 
         shipperCity.setLayoutOrientation(JList.VERTICAL);
         shipToCountry.setLayoutOrientation(JList.VERTICAL);
         shipToZone.setLayoutOrientation(JList.VERTICAL);
         truckType.setLayoutOrientation(JList.VERTICAL);
         supplier.setLayoutOrientation(JList.VERTICAL);
-        year.setLayoutOrientation(JList.VERTICAL);
 
         JScrollPane shipperCityScroll = new JScrollPane(shipperCity);
         JScrollPane shipToCountryScroll = new JScrollPane(shipToCountry);
         JScrollPane shipToZoneScroll = new JScrollPane(shipToZone);
         JScrollPane truckTypeScroll = new JScrollPane(truckType);
         JScrollPane supplierScroll = new JScrollPane(supplier);
-        JScrollPane yearScroll = new JScrollPane(year);
 
         shipperCityScroll.setPreferredSize(new Dimension(200, 100));
         shipToCountryScroll.setPreferredSize(new Dimension(200, 100));
         shipToZoneScroll.setPreferredSize(new Dimension(200, 100));
         truckTypeScroll.setPreferredSize(new Dimension(200, 100));
         supplierScroll.setPreferredSize(new Dimension(200, 100));
-        yearScroll.setPreferredSize(new Dimension(200, 100));
 
         JPanel panelSearch = new JPanel();
         JLabel label = new JLabel("Shipper City");
@@ -92,13 +87,6 @@ public class PanelSearch extends JPanel {
         panelSearch.add(panel);
         panel.add(label);
         panel.add(supplierScroll);
-        label = new JLabel("Year");
-        label.setPreferredSize(new Dimension(100, 25));
-        label.setHorizontalAlignment(JLabel.RIGHT);
-        panel = new JPanel();
-        panelSearch.add(panel);
-        panel.add(label);
-        panel.add(yearScroll);
 
         JButton button = new JButton("Search");
         button.setPreferredSize(new Dimension(250, 30));
@@ -139,23 +127,17 @@ public class PanelSearch extends JPanel {
         return supplier;
     }
 
-    public JList<Object> getYear() {
-        return year;
-    }
-
     public void majData() {
         shipperCity.setListData(DataCharger.getCities());
         shipToCountry.setListData(DataCharger.getCountries());
         shipToZone.setListData(DataCharger.getZones());
         truckType.setListData(DataCharger.getTrucks());
         supplier.setListData(DataCharger.getSuppliers());
-        year.setListData(DataCharger.getYears());
 
         shipperCity.setSelectedIndices(new int[] { });
         shipToCountry.setSelectedIndices(new int[] { });
         shipToZone.setSelectedIndices(new int[] { });
         truckType.setSelectedIndices(new int[] { });
         supplier.setSelectedIndices(new int[] { });
-        year.setSelectedIndices(new int[] { 1 });
     }
 }

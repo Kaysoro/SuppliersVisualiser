@@ -26,11 +26,9 @@ public class Road extends SearchableImp{
     private Truck truckType;
     private double price;
     private int numberTruck;
-    private int year;
 
     public Road(String id, String startDate, String expiryDate, String shipperName, City shipperCity, Supplier supplier,
-                String currency, Country shipToCountry, Zone shipToZone, Truck truckType, double price, int numberTruck,
-                int year) {
+                String currency, Country shipToCountry, Zone shipToZone, Truck truckType, double price, int numberTruck) {
         super();
         this.id = id;
         this.startDate = startDate;
@@ -44,13 +42,12 @@ public class Road extends SearchableImp{
         this.truckType = truckType;
         this.price = price;
         this.numberTruck = numberTruck;
-        this.year = year;
     }
 
     public Road(String startDate, String expiryDate, String carrier, City shipperCity, Supplier supplier, String currency,
-                Country shipToCountry, Zone shipToZone, Truck truckType, double price, int numberTruck, int year) {
+                Country shipToCountry, Zone shipToZone, Truck truckType, double price, int numberTruck) {
        this(null, startDate, expiryDate, carrier, shipperCity, supplier, currency, shipToCountry, shipToZone, truckType,
-               price, numberTruck, year);
+               price, numberTruck);
     }
 
     public Road(){}
@@ -63,8 +60,8 @@ public class Road extends SearchableImp{
         try{
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO Road (id, startDate, "
                     + "expiryDate, currency, shipperName, price, numberTruck, supplier, "
-                    + "shipperCity, shipToZone, shipToCountry, truckType, yearEmission) "
-                    + "VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+                    + "shipperCity, shipToZone, shipToCountry, truckType) "
+                    + "VALUES (null, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 
             preparedStatement.setString(1, getStartDate());
             preparedStatement.setString(2, getExpiryDate());
@@ -77,7 +74,6 @@ public class Road extends SearchableImp{
             preparedStatement.setString(9, getShipToZone().getName());
             preparedStatement.setString(10, getShipToCountry().getName());
             preparedStatement.setString(11, getTruckType().getType());
-            preparedStatement.setInt(12, getYear());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -104,14 +100,12 @@ public class Road extends SearchableImp{
                         + " AND shipToCountry = ?"
                         + " AND shipToZone = ?"
                         + " AND truckType = ?"
-                        + " AND year = ?"
                         + " AND supplier = ?;");
                 preparedStatement.setString(1, getShipperCity().getName());
                 preparedStatement.setString(2, getShipToCountry().getName());
                 preparedStatement.setString(3, getShipToZone().getName());
                 preparedStatement.setString(4, getTruckType().getType());
-                preparedStatement.setInt(5, getYear());
-                preparedStatement.setString(6, getSupplier().getName());
+                preparedStatement.setString(5, getSupplier().getName());
             }
 
             preparedStatement.executeUpdate();
@@ -120,17 +114,15 @@ public class Road extends SearchableImp{
         }
     }
 
-    public static void deleteRoads(Supplier supplier, int year){
+    public static void deleteRoads(Supplier supplier){
         Connexion connexion = Connexion.getInstance();
         Connection connection = connexion.getConnection();
 
         try{
             PreparedStatement preparedStatement = connection.prepareStatement
                     ("DELETE FROM Road "
-                        + "WHERE yearEmission = ?"
-                        + " AND supplier = ?;");
-                preparedStatement.setInt(1, year);
-                preparedStatement.setString(2, supplier.getName());
+                        + "WHERE supplier = ?;");
+                preparedStatement.setString(1, supplier.getName());
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -188,10 +180,6 @@ public class Road extends SearchableImp{
         return "id";
     }
 
-    public static String getpYear() {
-        return "yearEmission";
-    }
-
     /** Values **/
 
     public Supplier getSupplier(){
@@ -240,9 +228,5 @@ public class Road extends SearchableImp{
 
     public String getId() {
         return id;
-    }
-
-    public int getYear() {
-        return year;
     }
 }

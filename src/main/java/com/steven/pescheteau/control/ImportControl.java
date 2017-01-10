@@ -47,47 +47,6 @@ public class ImportControl implements ActionListener{
 
             final File selectedFile = fileChooser.getSelectedFile();
 
-            List<String> years = new ArrayList<String>();
-            Matcher m = Pattern.compile("(\\d{4})")
-                    .matcher(selectedFile.getName());
-
-            Object year;
-
-            while (m.find())
-                years.add(m.group());
-
-            if (! years.isEmpty()){
-                years.add("Other");
-
-                year = JOptionPane.showInputDialog(null,
-                        "Some years have been found in the document. Please select the year which\n" +
-                                "correspond to the emission of these suppliers prices.",
-                        "Year of the emission of suppliers prices",
-                        JOptionPane.QUESTION_MESSAGE,
-                        null, years.toArray(), years.get(0));
-
-                if (year == null) return;
-
-                if(year.equals("Other"))
-                    do {
-                        year = JOptionPane.showInputDialog(null,
-                                "Please indicate the correct year which correspond to the emission\n"
-                                       + " of these suppliers prices.",
-                                "Year of the emission of suppliers prices",
-                                JOptionPane.QUESTION_MESSAGE);
-                        if (year == null) return;
-                    }while(! Pattern.compile("^\\d{4}$").matcher((String) year).find());
-            }
-            else
-                do {
-                    year = JOptionPane.showInputDialog(null,
-                            "Please indicate the correct year which correspond to the emission\n"
-                                    + " of these suppliers prices.",
-                            "Year of the emission of suppliers prices",
-                            JOptionPane.QUESTION_MESSAGE);
-                    if (year == null) return;
-                }while(! Pattern.compile("^\\d{4}$").matcher((String) year).find());
-
             /*
             The application have to freeze for this step : in fact,
             the importation could false some search (incomplete results)
@@ -114,7 +73,6 @@ public class ImportControl implements ActionListener{
             display.validate();
             display.repaint();
 
-            final Object finalYear = year;
             SwingWorker sw = new SwingWorker(){
                 protected Object doInBackground() {
                     //Import file with POI
@@ -200,7 +158,7 @@ public class ImportControl implements ActionListener{
                             if (currentSupplier == null || currentSupplier !=
                                    Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue())){
                                 currentSupplier = Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue());
-                                Road.deleteRoads(currentSupplier, Integer.parseInt((String) finalYear));
+                                Road.deleteRoads(currentSupplier);
                             }
 
                             for (int i = 35; i <= 40; i++){
@@ -244,7 +202,7 @@ public class ImportControl implements ActionListener{
 
                                     // Now we can insert it !
                                     Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
-                                            country, zone, truck, price, numberTruck, Integer.parseInt((String) finalYear));
+                                            country, zone, truck, price, numberTruck);
                                     road.insert();
                                 }
                             }

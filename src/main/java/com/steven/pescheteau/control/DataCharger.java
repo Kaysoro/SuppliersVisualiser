@@ -45,18 +45,4 @@ public class DataCharger {
         Collections.sort(list);
         return list.toArray();
     }
-
-    public static Object[] getYears(){
-        List<String> list =  new ArrayList<String>();
-        int yearMax = Calendar.getInstance().get(Calendar.YEAR) + 1;
-        for(int i = 2010; i <= yearMax; i++)
-            list.add(String.valueOf(i));
-        Collections.sort(list, new Comparator<String>(){
-            @Override
-            public int compare(String o1, String o2) {
-                return Integer.parseInt(o2) - Integer.parseInt(o1);
-            }
-        });
-        return list.toArray();
-    }
 }

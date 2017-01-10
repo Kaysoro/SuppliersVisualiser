@@ -52,7 +52,7 @@ public class SearchControl implements ActionListener {
                 .param(road.getpPrice()).param(road.getpNumberTruck())
                 .param(road.getpSupplier()).param(road.getpShipperCity())
                 .param(road.getpShipToZone()).param(road.getpShipToCountry())
-                .param(road.getpTruckType()).param(road.getpYear())
+                .param(road.getpTruckType())
         .from()
                 .table(road);
 
@@ -161,25 +161,6 @@ public class SearchControl implements ActionListener {
             sql.parenthese();
         }
 
-        final boolean yearSelected = ! panel.getYear().getSelectedValuesList().isEmpty();
-        final boolean yearSingleSelected = panel.getYear().getSelectedValuesList().size() == 1;
-        if (yearSelected){
-            List<Object> years = panel.getYear().getSelectedValuesList();
-
-            if (yearSingleSelected)
-                title.append(" in ").append(years.get(0));
-
-            sql.where().parenthese();
-            sql.param(road.getpYear()).equals()
-                    .value((String) years.get(0), SQL.INT);
-            years.remove(0);
-
-            for(Object year : years)
-                sql.or().param(road.getpYear()).equals()
-                        .value((String) year, SQL.INT);
-            sql.parenthese();
-        }
-
         sql.orderBy().param(road.getpPrice()).asc()
                 .limit(Settings.NUMBER_LINES_RESULT());
 
@@ -231,7 +212,6 @@ public class SearchControl implements ActionListener {
                                 , Truck.getTrucks().get(resultSet.getString(Road.getpTruckType()))
                                 , resultSet.getDouble(Road.getpPrice())
                                 , resultSet.getInt(Road.getpNumberTruck())
-                                , resultSet.getInt(Road.getpYear())
                         ));
                     }
 
@@ -254,8 +234,6 @@ public class SearchControl implements ActionListener {
                     panelResults.getTable().removeColumn(panelResults.getTable().getColumn(RoadTable.ZONE()));
                 if (truckSelected && truckSingleSelected)
                     panelResults.getTable().removeColumn(panelResults.getTable().getColumn(RoadTable.TRUCK()));
-                if (yearSelected && yearSingleSelected)
-                    panelResults.getTable().removeColumn(panelResults.getTable().getColumn(RoadTable.YEAR()));
 
                 return null;
             }
