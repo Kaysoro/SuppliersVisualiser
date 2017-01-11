@@ -1,5 +1,6 @@
 package com.steven.pescheteau.control;
 
+import com.monitorjbl.xlsx.StreamingReader;
 import com.steven.pescheteau.domain.*;
 import com.steven.pescheteau.model.Settings;
 import com.steven.pescheteau.view.Display;
@@ -15,11 +16,9 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by steve on 28/09/2016.
@@ -75,11 +74,14 @@ public class ImportControl implements ActionListener{
 
             SwingWorker sw = new SwingWorker(){
                 protected Object doInBackground() {
-                    //Import file with POI
-                    try {
+                    //Import file with Excel Streaming Reader
+                    try (
+                            Workbook workbook = StreamingReader.builder()
+                                    .rowCacheSize(100)
+                                    .bufferSize(4096)
+                                    .open(selectedFile)) {
+                        Sheet sheet = workbook.getSheet("Request for Quotation");
 
-                        final Workbook workbook = WorkbookFactory.create(selectedFile);
-                        final Sheet sheet = workbook.getSheet("Request for Quotation");
                         if (sheet == null){
                             JOptionPane.showMessageDialog(display,
                                     "Import have failed : \"Request for Quotation\" sheet "
@@ -89,127 +91,105 @@ public class ImportControl implements ActionListener{
                             return null;
                         }
 
-                        int lastRowNum = sheet.getLastRowNum();
-                        LOG.info("Import of " + lastRowNum + " rows succeded");
+                        LOG.info("Opening Excel file has succeed.");
 
-                        // First iteration : we insert all new data from type trucks
-                        Row row = sheet.getRow(4);
-                        for (int i = 35; i <= 40; i++)
-                            if (! Truck.getTrucks().containsKey(row.getCell(i).getStringCellValue())){
-                                Truck truck = new Truck(row.getCell(i).getStringCellValue());
-                                truck.insert();
-                            }
-
-                        // Now we can start with the biggest iteration
-                        row = sheet.getRow(5);
-                        Supplier currentSupplier = null;
-
-                        do {
-                            labelImport.setText("Please wait, the import is underway... (" + row.getRowNum() + "/" + lastRowNum + ")");
-                            final Row finalRow = row;
-                            row = sheet.getRow(finalRow.getRowNum() + 1);
-
-                            // Supplier
-                            if (finalRow.getCell(2) == null || finalRow.getCell(2).getCellType() == Cell.CELL_TYPE_BLANK){
-                                LOG.info("Supplier is missing for row " + (finalRow.getRowNum() + 1) + " : ignored.");
-                                continue;
-                            }
-                            if (! Supplier.getSuppliers().containsKey(finalRow.getCell(2).getStringCellValue())){
-                                Supplier supplier = new Supplier(finalRow.getCell(2).getStringCellValue());
-                                supplier.insert();
-                            }
-
-                            // City
-                            if (finalRow.getCell(3) == null || finalRow.getCell(3).getCellType() == Cell.CELL_TYPE_BLANK){
-                                LOG.info("City is missing for row " + (finalRow.getRowNum() + 1) + " : ignored.");
-                                continue;
-                            }
-                            if (! City.getCities().containsKey(finalRow.getCell(3).getStringCellValue())){
-                                City city = new City(finalRow.getCell(3).getStringCellValue());
-                                city.insert();
-                            }
-
-                            // Country
-                            if (finalRow.getCell(5) == null || finalRow.getCell(5).getCellType() == Cell.CELL_TYPE_BLANK){
-                                LOG.info("Country is missing for row " + (finalRow.getRowNum() + 1) + " : ignored.");
-                                continue;
-                            }
-                            if (!Country.getCountries().containsKey(finalRow.getCell(5).getStringCellValue())){
-                                Country country = new Country(finalRow.getCell(5).getStringCellValue());
-                                country.insert();
-                            }
-
-                            // Zone
-                            if (finalRow.getCell(6) == null || finalRow.getCell(6).getCellType() == Cell.CELL_TYPE_BLANK){
-                                LOG.info("Zone is missing for row " + (finalRow.getRowNum() + 1) + " : ignored.");
-                                continue;
-                            }
-                            final String zoneName;
-                            if (finalRow.getCell(6).getCellType() == Cell.CELL_TYPE_NUMERIC)
-                                zoneName = String.valueOf((int) finalRow.getCell(6).getNumericCellValue());
-                            else
-                                zoneName = finalRow.getCell(6).getStringCellValue();
-                            if (! Zone.getZones().containsKey(zoneName)){
-                                Zone zone = new Zone(zoneName);
-                                zone.insert();
-                            }
-
-                            // Call DELETE Function if it's an update
-                            if (currentSupplier == null || currentSupplier !=
-                                   Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue())){
-                                currentSupplier = Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue());
-                                Road.deleteRoads(currentSupplier);
-                            }
-
-                            for (int i = 35; i <= 40; i++){
-                                if (finalRow.getCell(i) != null &&
-                                        finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_BLANK){
-
-                                    if (finalRow.getCell(i).getCellType() != Cell.CELL_TYPE_NUMERIC){
-                                        LOG.error("Price " + finalRow.getCell(i).getStringCellValue() + " at cell "
-                                                + column(i + 1) + (finalRow.getRowNum() + 1)
-                                                + " has been ignored.");
-                                        continue;
+                        Map<Integer, String> trucksTable = new HashMap<>();
+                        for (Row r : sheet) {
+                            if (r.getRowNum() == (Settings.FIRST_LINE() - 2)){
+                                // First iteration : we insert all new data from type trucks
+                                for (int i = 35; i <= 40; i++) {
+                                    if (!Truck.getTrucks().containsKey(r.getCell(i).getStringCellValue())) {
+                                        Truck truck = new Truck(r.getCell(i).getStringCellValue());
+                                        truck.insert();
                                     }
-                                    // We have found correct prices !
-                                    String startDate;
-                                    try {
-                                        startDate = new SimpleDateFormat("dd-MM-yyyy").format(finalRow.getCell(0).getDateCellValue());
-                                    } catch(Exception e) {
-                                        startDate = String.valueOf(finalRow.getCell(0).getStringCellValue());
-                                    }
-
-                                    String expiryDate;
-                                    try {
-                                        expiryDate = new SimpleDateFormat("dd-MM-yyyy").format(finalRow.getCell(1).getDateCellValue());
-                                    } catch(Exception e) {
-                                        expiryDate = String.valueOf(finalRow.getCell(1).getStringCellValue());
-                                    }
-
-                                    Supplier supplier = Supplier.getSuppliers().get(finalRow.getCell(2).getStringCellValue());
-                                    City city = City.getCities().get(finalRow.getCell(3).getStringCellValue());
-                                    String shipperName = finalRow.getCell(4).getStringCellValue();
-                                    Country country = Country.getCountries().get(finalRow.getCell(5).getStringCellValue());
-                                    Zone zone = Zone.getZones().get(zoneName);
-                                    String currency = finalRow.getCell(7).getStringCellValue();
-                                    double price = finalRow.getCell(i).getNumericCellValue();
-                                    Truck truck = Truck.getTrucks().get(sheet.getRow(4).getCell(i).getStringCellValue());
-
-                                    int numberTruck = -1;
-                                    if (finalRow.getCell(i + 7) != null &&
-                                            finalRow.getCell(i + 7).getCellType() != Cell.CELL_TYPE_BLANK)
-                                        numberTruck = (int) finalRow.getCell(i + 7).getNumericCellValue();
-
-                                    // Now we can insert it !
-                                    Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
-                                            country, zone, truck, price, numberTruck);
-                                    road.insert();
+                                    trucksTable.put(i, r.getCell(i).getStringCellValue());
                                 }
                             }
+                            else if (r.getRowNum() >= (Settings.FIRST_LINE() - 1)) {
+                                // Now we can start with the biggest iteration
+                                if (r.getRowNum() > 1)
+                                    labelImport.setText("Please wait, the import is underway... (" + r.getRowNum() + " lines processed)");
+                                else
+                                    labelImport.setText("Please wait, the import is underway... (" + r.getRowNum() + " line processed)");
 
-                        } while(row != null && row.getRowNum() <= lastRowNum);
+                                boolean importError = false;
 
-                    } catch (Exception e) {
+                                // Supplier
+                                if (r.getCell(2) == null || r.getCell(2).getCellType() == Cell.CELL_TYPE_BLANK
+                                        || r.getCell(2).getCellType() == Cell.CELL_TYPE_ERROR) {
+                                    LOG.info("Supplier is missing for row " + (r.getRowNum() + 1) + " : ignored.");
+                                    importError = true;
+                                } else if (!Supplier.getSuppliers().containsKey(r.getCell(2).getStringCellValue())) {
+                                    Supplier supplier = new Supplier(r.getCell(2).getStringCellValue());
+                                    supplier.insert();
+                                }
+
+                                // City
+                                if (r.getCell(3) == null || r.getCell(3).getCellType() == Cell.CELL_TYPE_BLANK
+                                        || r.getCell(3).getCellType() == Cell.CELL_TYPE_ERROR) {
+                                    LOG.info("City is missing for row " + (r.getRowNum() + 1) + " : ignored.");
+                                    importError = true;
+                                } else if (!City.getCities().containsKey(r.getCell(3).getStringCellValue())) {
+                                    City city = new City(r.getCell(3).getStringCellValue());
+                                    city.insert();
+                                }
+
+                                // Country
+                                if (r.getCell(5) == null || r.getCell(5).getCellType() == Cell.CELL_TYPE_BLANK
+                                        || r.getCell(5).getCellType() == Cell.CELL_TYPE_ERROR) {
+                                    LOG.info("Country is missing for row " + (r.getRowNum() + 1) + " : ignored.");
+                                    importError = true;
+                                } else if (!Country.getCountries().containsKey(r.getCell(5).getStringCellValue())) {
+                                    Country country = new Country(r.getCell(5).getStringCellValue());
+                                    country.insert();
+                                }
+
+                                // Zone
+                                if (r.getCell(6) == null || r.getCell(6).getCellType() == Cell.CELL_TYPE_BLANK
+                                        || r.getCell(6).getCellType() == Cell.CELL_TYPE_ERROR) {
+                                    LOG.info("Zone is missing for row " + (r.getRowNum() + 1) + " : ignored.");
+                                    importError = true;
+                                } else if (!Zone.getZones().containsKey(r.getCell(6).getStringCellValue())) {
+                                    Zone zone = new Zone(r.getCell(6).getStringCellValue());
+                                    zone.insert();
+                                }
+
+                                if (!importError) {
+                                    for (int i = 35; i <= 40; i++) {
+                                        if (r.getCell(i) != null && r.getCell(i).getCellType() != Cell.CELL_TYPE_BLANK) {
+                                            if (r.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC) {
+                                                // We have found correct prices !
+                                                String startDate = r.getCell(0).getStringCellValue();
+                                                String expiryDate = r.getCell(1).getStringCellValue();
+                                                Supplier supplier = Supplier.getSuppliers().get(r.getCell(2).getStringCellValue());
+                                                City city = City.getCities().get(r.getCell(3).getStringCellValue());
+                                                String shipperName = r.getCell(4).getStringCellValue();
+                                                Country country = Country.getCountries().get(r.getCell(5).getStringCellValue());
+                                                Zone zone = Zone.getZones().get(r.getCell(6).getStringCellValue());
+                                                String currency = r.getCell(7).getStringCellValue();
+                                                double price = r.getCell(i).getNumericCellValue();
+                                                Truck truck = Truck.getTrucks().get(trucksTable.get(i));
+
+                                                int numberTruck = -1;
+                                                if (r.getCell(i + 7) != null
+                                                        && r.getCell(i + 7).getCellType() == Cell.CELL_TYPE_NUMERIC)
+                                                    numberTruck = (int) r.getCell(i + 7).getNumericCellValue();
+
+                                                // Now we can insert it !
+                                                Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
+                                                        country, zone, truck, price, numberTruck);
+                                                road.insert();
+                                            } else {
+                                                LOG.error("Price " + r.getCell(i).getStringCellValue() + " at cell "
+                                                        + column(i + 1) + (r.getRowNum() + 1)
+                                                        + " has been ignored.");
+                                            }
+                                        } // if we have prices
+                                    } // for
+                                } // !importError
+                            } // >= FIRST LINE
+                        }
+                    } catch (IOException e) {
                         LOG.error(e.getMessage(), e);
                     }
 
