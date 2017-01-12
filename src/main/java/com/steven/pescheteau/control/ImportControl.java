@@ -176,9 +176,8 @@ public class ImportControl implements ActionListener{
                                                     numberTruck = (int) r.getCell(i + 7).getNumericCellValue();
 
                                                 // Now we can insert it !
-                                                Road road = new Road(startDate, expiryDate, shipperName, city, supplier, currency,
-                                                        country, zone, truck, price, numberTruck);
-                                                road.insert();
+                                                new Road(startDate, expiryDate, shipperName, city, supplier, currency,
+                                                        country, zone, truck, price, numberTruck).insert();
                                             } else {
                                                 LOG.error("Price " + r.getCell(i).getStringCellValue() + " at cell "
                                                         + column(i + 1) + (r.getRowNum() + 1)
