@@ -130,6 +130,18 @@ public class Road extends SearchableImp{
         }
     }
 
+    public static void clearTable(){
+        Connexion connexion = Connexion.getInstance();
+        Connection connection = connexion.getConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Road;");
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(Road.class).error(e.getMessage());
+        }
+    }
+
     /** Parameters **/
 
     public static String getpSupplier(){

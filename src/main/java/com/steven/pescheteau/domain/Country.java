@@ -90,4 +90,17 @@ public class Country extends SearchableImp {
     public String toString(){
         return name;
     }
+
+    public static void clearTable(){
+        Connexion connexion = Connexion.getInstance();
+        Connection connection = connexion.getConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Country;");
+            preparedStatement.executeUpdate();
+            getCountries().clear();
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(Country.class).error(e.getMessage());
+        }
+    }
 }

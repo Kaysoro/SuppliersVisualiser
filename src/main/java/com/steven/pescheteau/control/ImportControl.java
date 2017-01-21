@@ -91,6 +91,19 @@ public class ImportControl implements ActionListener{
                             return null;
                         }
 
+                        int response =  JOptionPane.showConfirmDialog(null,
+                                "Do you want to clear the database before importing ?",
+                                "Clear Database", JOptionPane.YES_NO_OPTION);
+
+                        if(response == JOptionPane.YES_OPTION){
+                            City.clearTable();
+                            Country.clearTable();
+                            Road.clearTable();
+                            Supplier.clearTable();
+                            Truck.clearTable();
+                            Zone.clearTable();
+                        }
+
                         LOG.info("Opening Excel file has succeed.");
 
                         Map<Integer, String> trucksTable = new HashMap<>();

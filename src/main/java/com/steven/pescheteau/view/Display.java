@@ -1,9 +1,6 @@
 package com.steven.pescheteau.view;
 
-import com.steven.pescheteau.control.AboutControl;
-import com.steven.pescheteau.control.CloseControl;
-import com.steven.pescheteau.control.ImportControl;
-import com.steven.pescheteau.control.SettingsControl;
+import com.steven.pescheteau.control.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +11,7 @@ import java.awt.*;
 public class Display extends JFrame {
 
     private JMenuItem importSupplier;
+    private JMenuItem clear;
     private JMenuItem quit;
     private JMenuItem settings;
     private JMenuItem about;
@@ -41,6 +39,10 @@ public class Display extends JFrame {
         importSupplier.setAccelerator(KeyStroke.getKeyStroke("control I"));
         importSupplier.setToolTipText("Import an XLSX file provided by a supplier");
 
+        clear =  new JMenuItem("Clear Database");
+        clear.setAccelerator(KeyStroke.getKeyStroke("control D"));
+        clear.setToolTipText("Remove all the records from the database.");
+
         quit =  new JMenuItem("Quit");
         quit.setAccelerator(KeyStroke.getKeyStroke("control Q"));
         quit.setToolTipText("Close the application");
@@ -55,6 +57,7 @@ public class Display extends JFrame {
         about.setToolTipText("Some informations about this application");
 
         menuFile.add(importSupplier);
+        menuFile.add(clear);
         menuFile.add(quit);
 
         menuOther.add(settings);
@@ -73,8 +76,9 @@ public class Display extends JFrame {
         getContentPane().add(tab);
 
         // Adding some controls
-        CloseControl closeCtrl = new CloseControl(this);
         importSupplier.addActionListener(new ImportControl(this, tab));
+        clear.addActionListener(new ClearDatabaseControl());
+        CloseControl closeCtrl = new CloseControl(this);
         quit.addActionListener(closeCtrl);
 
         settings.addActionListener(new SettingsControl());

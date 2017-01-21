@@ -90,4 +90,17 @@ public class Truck extends SearchableImp{
     public String toString(){
         return type;
     }
+
+    public static void clearTable(){
+        Connexion connexion = Connexion.getInstance();
+        Connection connection = connexion.getConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Truck;");
+            preparedStatement.executeUpdate();
+            getTrucks().clear();
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(Truck.class).error(e.getMessage());
+        }
+    }
 }

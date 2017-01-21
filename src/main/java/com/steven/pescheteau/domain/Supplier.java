@@ -90,4 +90,17 @@ public class Supplier extends SearchableImp{
     public String toString(){
         return name;
     }
+
+    public static void clearTable(){
+        Connexion connexion = Connexion.getInstance();
+        Connection connection = connexion.getConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Supplier;");
+            preparedStatement.executeUpdate();
+            getSuppliers().clear();
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(Supplier.class).error(e.getMessage());
+        }
+    }
 }

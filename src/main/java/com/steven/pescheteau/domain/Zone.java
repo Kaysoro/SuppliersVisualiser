@@ -90,4 +90,17 @@ public class Zone extends SearchableImp{
     public String toString(){
         return name;
     }
+
+    public static void clearTable(){
+        Connexion connexion = Connexion.getInstance();
+        Connection connection = connexion.getConnection();
+
+        try{
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM Zone;");
+            preparedStatement.executeUpdate();
+            getZones().clear();
+        } catch (SQLException e) {
+            LoggerFactory.getLogger(Zone.class).error(e.getMessage());
+        }
+    }
 }
