@@ -170,8 +170,12 @@ public class ImportControl implements ActionListener{
                                 if (!importError) {
                                     for (int i = 35; i <= 40; i++) {
                                         if (r.getCell(i) != null && r.getCell(i).getCellType() != Cell.CELL_TYPE_BLANK) {
-                                            if (r.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC) {
-                                                // We have found correct prices !
+                                            if (r.getCell(i).getCellType() == Cell.CELL_TYPE_NUMERIC
+                                                    && r.getCell(i + 7) != null
+                                                    && r.getCell(i + 7).getCellType() == Cell.CELL_TYPE_NUMERIC
+                                                    && r.getCell(i + 7).getNumericCellValue() != 0) {
+
+                                                // We have found correct prices and trucks are precised !
                                                 String startDate = r.getCell(0).getStringCellValue();
                                                 String expiryDate = r.getCell(1).getStringCellValue();
                                                 Supplier supplier = Supplier.getSuppliers().get(r.getCell(2).getStringCellValue());
@@ -182,19 +186,11 @@ public class ImportControl implements ActionListener{
                                                 String currency = r.getCell(7).getStringCellValue();
                                                 double price = r.getCell(i).getNumericCellValue();
                                                 Truck truck = Truck.getTrucks().get(trucksTable.get(i));
-
-                                                int numberTruck = -1;
-                                                if (r.getCell(i + 7) != null
-                                                        && r.getCell(i + 7).getCellType() == Cell.CELL_TYPE_NUMERIC)
-                                                    numberTruck = (int) r.getCell(i + 7).getNumericCellValue();
+                                                int numberTruck = (int) r.getCell(i + 7).getNumericCellValue();
 
                                                 // Now we can insert it !
                                                 new Road(startDate, expiryDate, shipperName, city, supplier, currency,
                                                         country, zone, truck, price, numberTruck).insert();
-                                            } else {
-                                                LOG.error("Price " + r.getCell(i).getStringCellValue() + " at cell "
-                                                        + column(i + 1) + (r.getRowNum() + 1)
-                                                        + " has been ignored.");
                                             }
                                         } // if we have prices
                                     } // for
