@@ -49,14 +49,15 @@ public class RoadTable extends AbstractTableModel{
                 return road.getShipperName();
             case 4: // Currency
                 return road.getCurrency();
-            case 5: // Price
-                return road.getPrice();
+            case 5: // Price (round X.XX)
+                return Math.round(road.getPrice() * 100) / 100;
             case 6: // Number truck
                 return road.getNumberTruck() != -1 ? road.getNumberTruck() : " - ";
-            case 7: // Spend
-                return road.getNumberTruck() != -1 ? road.getNumberTruck() * road.getPrice() : " - ";
-            case 8: // Saving / Best price
-                return (Math.round((100 * road.getPrice() / roads.get(0).getPrice() - 100) * 100)) / 100d + "%";
+            case 7: // Spend (round X.XX)
+                return road.getNumberTruck() != -1 ? Math.round(road.getNumberTruck() * road.getPrice() * 100) / 100 : " - ";
+            case 8: // Saving / Best price (round X.X)
+                double value = (Math.round((100 * road.getPrice() / roads.get(0).getPrice() - 100) * 100)) / 100d;
+                return Math.round(value * 10) / 10 + "%";
 
             // Optional
             case 9: // Supplier
@@ -72,6 +73,44 @@ public class RoadTable extends AbstractTableModel{
 
             default: //Should never arrive
                 return null;
+        }
+    }
+
+    @Override
+    public Class getColumnClass(int column) {
+        switch (column) {
+            case 0: // #
+                return Integer.class;
+            case 1: // Start Date
+                return String.class;
+            case 2: // Expiry Date
+                return String.class;
+            case 3: // ShipperName
+                return String.class;
+            case 4: // Currency
+                return String.class;
+            case 5: // Price (round X.XX)
+                return Double.class;
+            case 6: // Number truck
+                return Integer.class;
+            case 7: // Spend (round X.XX)
+                return Double.class;
+            case 8: // Saving / Best price (round X.X)
+                return String.class;
+
+            // Optional
+            case 9: // Supplier
+                return String.class;
+            case 10: // City
+                return String.class;
+            case 11: // Country
+                return String.class;
+            case 12: // Zone
+                return String.class;
+            case 13: // Truck's type
+                return String.class;
+            default:
+                return String.class;
         }
     }
 
