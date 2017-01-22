@@ -9,15 +9,27 @@ import java.util.List;
  */
 public class RoadTable extends AbstractTableModel{
 
-    private List<Road> roads;
-    public static final String[] header = {"#", "Start Date", "Expiry Date", "Shipper Name", "Currency", "Price",
+    private static final String[] header = {"#", "Start Date", "Expiry Date", "Shipper Name", "Currency", "Price",
             "#Trucks", "Spend", "Saving / Best price",
             "Carrier", "Shipper City", "Ship to Country", "Ship to Zone", "Truck's Type" // Optional
     };
 
+    private List<Road> roads;
+    private int totalTruck;
+    private double totalSpend;
+
     public RoadTable(List<Road> roads){
         super();
         this.roads = roads;
+
+        totalTruck = 0;
+        totalSpend = 0;
+        for(Road road : roads) {
+            totalTruck += road.getNumberTruck();
+            totalSpend += road.getNumberTruck() * road.getPrice();
+        }
+
+        totalSpend = Math.round(totalSpend * 100) / 100d;
     }
 
     @Override
@@ -50,14 +62,14 @@ public class RoadTable extends AbstractTableModel{
             case 4: // Currency
                 return road.getCurrency();
             case 5: // Price (round X.XX)
-                return Math.round(road.getPrice() * 100) / 100;
+                return Math.round(road.getPrice() * 100) / 100d;
             case 6: // Number truck
-                return road.getNumberTruck() != -1 ? road.getNumberTruck() : " - ";
+                return road.getNumberTruck();
             case 7: // Spend (round X.XX)
-                return road.getNumberTruck() != -1 ? Math.round(road.getNumberTruck() * road.getPrice() * 100) / 100 : " - ";
+                return Math.round(road.getNumberTruck() * road.getPrice() * 100) / 100d;
             case 8: // Saving / Best price (round X.X)
                 double value = (Math.round((100 * road.getPrice() / roads.get(0).getPrice() - 100) * 100)) / 100d;
-                return Math.round(value * 10) / 10 + "%";
+                return Math.round(value * 10) / 10d + "%";
 
             // Optional
             case 9: // Supplier
@@ -132,5 +144,13 @@ public class RoadTable extends AbstractTableModel{
 
     public static String TRUCK(){
         return header[13];
+    }
+
+    public int getTotalTruck(){
+        return totalTruck;
+    }
+
+    public double getTotalSpend(){
+        return totalSpend;
     }
 }

@@ -22,6 +22,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -222,6 +223,10 @@ public class SearchControl implements ActionListener {
                 RoadTable table = new RoadTable(results);
                 panelResults.getTable().setModel(table);
                 panelResults.getTable().setRowSorter(new TableRowSorter<TableModel>(table));
+
+                NumberFormat nf = NumberFormat.getInstance();
+                panelResults.getTotalTruck().setText(nf.format(table.getTotalTruck()));
+                panelResults.getTotalSpend().setText(nf.format(table.getTotalSpend()));
 
                 // We remove all the columns not useful
                 if (supplierSelected && supplierSingleSelected)
