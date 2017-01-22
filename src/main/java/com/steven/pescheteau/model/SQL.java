@@ -43,7 +43,7 @@ public class SQL {
         else
             request.append(",");
 
-        request.append(" " + obj.getTable());
+        request.append(" ").append(obj.getTable());
 
         return this;
     }

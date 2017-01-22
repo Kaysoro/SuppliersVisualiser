@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class Zone extends SearchableImp{
 
-    public static Map<String, Zone> zones;
+    private static Map<String, Zone> zones;
     private Logger LOG = LoggerFactory.getLogger(Zone.class);
     private String name;
 
@@ -66,7 +66,7 @@ public class Zone extends SearchableImp{
     public static Map<String, Zone> getZones(){
         if (zones == null){
             LoggerFactory.getLogger(Zone.class).info("Searching for Zone data...");
-            zones = new HashMap<String, Zone>();
+            zones = new HashMap<>();
             Connexion connexion = Connexion.getInstance();
             Connection connection = connexion.getConnection();
 

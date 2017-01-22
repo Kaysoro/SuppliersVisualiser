@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class SearchControl implements ActionListener {
 
-    Logger LOG = LoggerFactory.getLogger(SearchControl.class);
+    private Logger LOG = LoggerFactory.getLogger(SearchControl.class);
     private PanelSearch panel;
 
     public SearchControl(PanelSearch panel){
@@ -46,13 +46,13 @@ public class SearchControl implements ActionListener {
         final SQL sql = new SQL();
         Road road = new Road();
         sql.select()
-                .param(road.getpId())
-                .param(road.getpStartDate()).param(road.getpExpiryDate())
-                .param(road.getpCurrency()).param(road.getpShipperName())
-                .param(road.getpPrice()).param(road.getpNumberTruck())
-                .param(road.getpSupplier()).param(road.getpShipperCity())
-                .param(road.getpShipToZone()).param(road.getpShipToCountry())
-                .param(road.getpTruckType())
+                .param(Road.getpId())
+                .param(Road.getpStartDate()).param(Road.getpExpiryDate())
+                .param(Road.getpCurrency()).param(Road.getpShipperName())
+                .param(Road.getpPrice()).param(Road.getpNumberTruck())
+                .param(Road.getpSupplier()).param(Road.getpShipperCity())
+                .param(Road.getpShipToZone()).param(Road.getpShipToCountry())
+                .param(Road.getpTruckType())
         .from()
                 .table(road);
 
@@ -69,12 +69,12 @@ public class SearchControl implements ActionListener {
             title.append(" to ");
 
             sql.where().parenthese();
-            sql.param(road.getpShipperCity()).equals()
+            sql.param(Road.getpShipperCity()).equals()
                     .value((String) cities.get(0), SQL.STRING);
             cities.remove(0);
 
             for(Object city : cities)
-                sql.or().param(road.getpShipperCity()).equals()
+                sql.or().param(Road.getpShipperCity()).equals()
                         .value((String) city, SQL.STRING);
             sql.parenthese();
         }
@@ -92,12 +92,12 @@ public class SearchControl implements ActionListener {
                 title.append("Countries");
 
             sql.where().parenthese();
-            sql.param(road.getpShipToCountry()).equals()
+            sql.param(Road.getpShipToCountry()).equals()
                     .value((String) countries.get(0), SQL.STRING);
             countries.remove(0);
 
             for(Object country : countries)
-                sql.or().param(road.getpShipToCountry()).equals()
+                sql.or().param(Road.getpShipToCountry()).equals()
                         .value((String) country, SQL.STRING);
             sql.parenthese();
         }
@@ -113,12 +113,12 @@ public class SearchControl implements ActionListener {
                 title.append("(").append(zones.get(0)).append(")");
 
             sql.where().parenthese();
-            sql.param(road.getpShipToZone()).equals()
+            sql.param(Road.getpShipToZone()).equals()
                     .value((String) zones.get(0), SQL.STRING);
             zones.remove(0);
 
             for(Object zone : zones)
-                sql.or().param(road.getpShipToZone()).equals()
+                sql.or().param(Road.getpShipToZone()).equals()
                         .value((String) zone, SQL.STRING);
             sql.parenthese();
         }
@@ -132,12 +132,12 @@ public class SearchControl implements ActionListener {
                 title.append(" by ").append(trucks.get(0));
 
             sql.where().parenthese();
-            sql.param(road.getpTruckType()).equals()
+            sql.param(Road.getpTruckType()).equals()
                     .value((String) trucks.get(0), SQL.STRING);
             trucks.remove(0);
 
             for(Object truck : trucks)
-                sql.or().param(road.getpTruckType()).equals()
+                sql.or().param(Road.getpTruckType()).equals()
                         .value((String) truck, SQL.STRING);
             sql.parenthese();
         }
@@ -151,17 +151,17 @@ public class SearchControl implements ActionListener {
                 title.append(" for ").append(suppliers.get(0));
 
             sql.where().parenthese();
-            sql.param(road.getpSupplier()).equals()
+            sql.param(Road.getpSupplier()).equals()
                     .value((String) suppliers.get(0), SQL.STRING);
             suppliers.remove(0);
 
             for(Object supplier : suppliers)
-                sql.or().param(road.getpSupplier()).equals()
+                sql.or().param(Road.getpSupplier()).equals()
                         .value((String) supplier, SQL.STRING);
             sql.parenthese();
         }
 
-        sql.orderBy().param(road.getpPrice()).asc()
+        sql.orderBy().param(Road.getpPrice()).asc()
                 .limit(Settings.NUMBER_LINES_RESULT());
 
         LOG.debug(sql.toString());
@@ -190,7 +190,7 @@ public class SearchControl implements ActionListener {
 
         SwingWorker sw = new SwingWorker(){
             protected Object doInBackground() {
-                List<Road> results = new ArrayList<Road>();
+                List<Road> results = new ArrayList<>();
 
                 Connexion connexion = Connexion.getInstance();
                 Connection connection = connexion.getConnection();

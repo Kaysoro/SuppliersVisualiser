@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class Supplier extends SearchableImp{
 
-    public static Map<String, Supplier> suppliers;
+    private static Map<String, Supplier> suppliers;
     private Logger LOG = LoggerFactory.getLogger(Supplier.class);
     private String name;
 
@@ -65,7 +65,7 @@ public class Supplier extends SearchableImp{
 
     public static Map<String, Supplier> getSuppliers(){
         if (suppliers == null){
-            suppliers = new HashMap<String, Supplier>();
+            suppliers = new HashMap<>();
 
             Connexion connexion = Connexion.getInstance();
             Connection connection = connexion.getConnection();

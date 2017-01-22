@@ -1,7 +1,6 @@
 package com.steven.pescheteau.control;
 
 import com.steven.pescheteau.domain.*;
-import com.steven.pescheteau.view.AboutDialog;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

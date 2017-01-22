@@ -30,7 +30,7 @@ public class CloseControl extends WindowAdapter implements ActionListener {
         quit();
     }
 
-    public void quit(){
+    private void quit(){
         Connexion.getInstance().close();
         display.dispose();
         System.exit(0);

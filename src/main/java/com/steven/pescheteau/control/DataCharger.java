@@ -10,19 +10,19 @@ import java.util.*;
 public class DataCharger {
 
     public static Object[] getCities(){
-        List<String> list =  new ArrayList<String>(City.getCities().keySet());
+        List<String> list =  new ArrayList<>(City.getCities().keySet());
         Collections.sort(list);
         return list.toArray();
     }
 
     public static Object[] getCountries(){
-        List<String> list =  new ArrayList<String>(Country.getCountries().keySet());
+        List<String> list =  new ArrayList<>(Country.getCountries().keySet());
         Collections.sort(list);
         return list.toArray();
     }
 
     public static Object[] getZones(){
-        List<String> list =  new ArrayList<String>(Zone.getZones().keySet());
+        List<String> list =  new ArrayList<>(Zone.getZones().keySet());
         Collections.sort(list, new Comparator<String>(){
             @Override
             public int compare(String o1, String o2) {
@@ -35,13 +35,13 @@ public class DataCharger {
     }
 
     public static Object[] getTrucks(){
-        List<String> list =  new ArrayList<String>(Truck.getTrucks().keySet());
+        List<String> list =  new ArrayList<>(Truck.getTrucks().keySet());
         Collections.sort(list);
         return list.toArray();
     }
 
     public static Object[] getSuppliers(){
-        List<String> list =  new ArrayList<String>(Supplier.getSuppliers().keySet());
+        List<String> list =  new ArrayList<>(Supplier.getSuppliers().keySet());
         Collections.sort(list);
         return list.toArray();
     }

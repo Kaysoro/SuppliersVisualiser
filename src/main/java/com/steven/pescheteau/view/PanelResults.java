@@ -11,6 +11,8 @@ import java.awt.*;
 public class PanelResults extends JPanel {
 
     private JTable table;
+    private JLabel totalTruck;
+    private JLabel totalSpend;
 
     public PanelResults(){
         super(new BorderLayout());
@@ -29,9 +31,29 @@ public class PanelResults extends JPanel {
         table.setAutoCreateRowSorter(true);
         JScrollPane scrollPane = new JScrollPane(table);
         add(scrollPane, BorderLayout.CENTER);
+
+        JPanel total = new JPanel();
+        total.setPreferredSize(new Dimension(1, 20));
+        total.add(new JLabel("TOTAL Truck : "));
+        totalTruck = new JLabel("0");
+        totalTruck.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        total.add(totalTruck);
+        total.add(new JLabel("TOTAL Spend : "));
+        totalSpend = new JLabel("0");
+        totalSpend.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
+        total.add(totalSpend);
+        add(total, BorderLayout.SOUTH);
     }
 
     public JTable getTable(){
         return table;
+    }
+
+    public JLabel getTotalTruck() {
+        return totalTruck;
+    }
+
+    public JLabel getTotalSpend() {
+        return totalSpend;
     }
 }

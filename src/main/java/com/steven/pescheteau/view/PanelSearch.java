@@ -14,7 +14,7 @@ import java.awt.*;
 
 public class PanelSearch extends JPanel {
 
-    Logger LOG = LoggerFactory.getLogger(PanelSearch.class);
+    private Logger LOG = LoggerFactory.getLogger(PanelSearch.class);
     private JTabbedPane tab;
     private JList<Object> shipperCity;
     private JList<Object> shipToCountry;
@@ -27,11 +27,11 @@ public class PanelSearch extends JPanel {
         this.tab = tab;
 
         // Recherches possibles
-        shipperCity = new JList<Object>();
-        shipToCountry = new JList<Object>();
-        shipToZone = new JList<Object>();
-        truckType = new JList<Object>();
-        supplier = new JList<Object>();
+        shipperCity = new JList<>();
+        shipToCountry = new JList<>();
+        shipToZone = new JList<>();
+        truckType = new JList<>();
+        supplier = new JList<>();
 
         shipperCity.setLayoutOrientation(JList.VERTICAL);
         shipToCountry.setLayoutOrientation(JList.VERTICAL);

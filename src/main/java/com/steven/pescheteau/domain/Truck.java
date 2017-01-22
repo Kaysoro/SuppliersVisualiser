@@ -16,8 +16,8 @@ import java.util.Map;
  */
 public class Truck extends SearchableImp{
 
-    public static Map<String, Truck> trucks;
-    Logger LOG = LoggerFactory.getLogger(Truck.class);
+    private static Map<String, Truck> trucks;
+    private Logger LOG = LoggerFactory.getLogger(Truck.class);
     private String type;
 
     public Truck(String type){
@@ -66,7 +66,7 @@ public class Truck extends SearchableImp{
     public static Map<String, Truck> getTrucks(){
         if (trucks == null){
             LoggerFactory.getLogger(Truck.class).info("Searching for Truck data...");
-            trucks = new HashMap<String, Truck>();
+            trucks = new HashMap<>();
             Connexion connexion = Connexion.getInstance();
             Connection connection = connexion.getConnection();
 

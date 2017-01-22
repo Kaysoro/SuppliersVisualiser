@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public class ImportControl implements ActionListener{
 
-    Logger LOG = LoggerFactory.getLogger(ImportControl.class);
+    private Logger LOG = LoggerFactory.getLogger(ImportControl.class);
     private Display display;
     private JTabbedPane tab;
 
@@ -217,15 +217,5 @@ public class ImportControl implements ActionListener{
 
             sw.execute();
         }
-    }
-
-    private String column(int n){
-        String name = "";
-        while (n > 0) {
-            n--;
-            name = (char)('A' + n % 26) + name;
-            n /= 26;
-        }
-        return name;
     }
 }

@@ -8,7 +8,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ import java.util.Map;
  */
 public class City extends SearchableImp{
 
-    public static Map<String, City> cities;
+    private static Map<String, City> cities;
     private Logger LOG = LoggerFactory.getLogger(City.class);
     private String name;
 
@@ -67,7 +66,7 @@ public class City extends SearchableImp{
     public static Map<String, City> getCities(){
         if (cities == null){
             LoggerFactory.getLogger(City.class).info("Searching for City data...");
-            cities = new HashMap<String, City>();
+            cities = new HashMap<>();
             Connexion connexion = Connexion.getInstance();
             Connection connection = connexion.getConnection();
 

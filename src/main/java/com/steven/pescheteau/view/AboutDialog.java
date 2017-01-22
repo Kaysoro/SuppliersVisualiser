@@ -15,10 +15,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.steven.pescheteau.model.Settings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AboutDialog extends JDialog {
 
-	private static final long serialVersionUID = 1L;
+	private Logger LOG = LoggerFactory.getLogger(AboutDialog.class);
 
 	public AboutDialog() {
 		super();
@@ -52,7 +54,9 @@ public class AboutDialog extends JDialog {
 				if (desktop != null && desktop.isSupported(Desktop.Action.BROWSE))
 					try {
 						desktop.browse(new URI("https://fr.linkedin.com/in/stevenpescheteau"));
-					} catch (Exception e1) {}
+					} catch (Exception e1) {
+                        LOG.error(e1.getMessage());
+                    }
 			}
 		});
 		JPanel panelImg = new JPanel();

@@ -13,7 +13,7 @@ import java.sql.SQLException;
  */
 public class Road extends SearchableImp{
 
-    Logger LOG = LoggerFactory.getLogger(Road.class);
+    private Logger LOG = LoggerFactory.getLogger(Road.class);
     private String id;
     private String startDate;
     private String expiryDate;
@@ -27,7 +27,7 @@ public class Road extends SearchableImp{
     private double price;
     private int numberTruck;
 
-    public Road(String id, String startDate, String expiryDate, String shipperName, City shipperCity, Supplier supplier,
+    private Road(String id, String startDate, String expiryDate, String shipperName, City shipperCity, Supplier supplier,
                 String currency, Country shipToCountry, Zone shipToZone, Truck truckType, double price, int numberTruck) {
         super();
         this.id = id;
@@ -111,22 +111,6 @@ public class Road extends SearchableImp{
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             LOG.error(e.getMessage());
-        }
-    }
-
-    public static void deleteRoads(Supplier supplier){
-        Connexion connexion = Connexion.getInstance();
-        Connection connection = connexion.getConnection();
-
-        try{
-            PreparedStatement preparedStatement = connection.prepareStatement
-                    ("DELETE FROM Road "
-                        + "WHERE supplier = ?;");
-                preparedStatement.setString(1, supplier.getName());
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            LoggerFactory.getLogger(Road.class).error(e.getMessage());
         }
     }
 

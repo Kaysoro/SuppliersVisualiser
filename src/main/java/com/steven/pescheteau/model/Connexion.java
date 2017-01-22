@@ -2,7 +2,6 @@ package com.steven.pescheteau.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -54,16 +53,6 @@ public class Connexion {
             instance = new Connexion();
         }
         return instance;
-    }
-
-    public ResultSet query(String requet) {
-        ResultSet resultat = null;
-        try {
-            resultat = statement.executeQuery(requet);
-        } catch (SQLException e) {
-            LOG.error("Error in the request  : " + requet);
-        }
-        return resultat;
     }
 
     public Connection getConnection(){

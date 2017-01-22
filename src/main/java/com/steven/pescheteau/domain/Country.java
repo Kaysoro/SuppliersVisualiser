@@ -16,8 +16,8 @@ import java.util.Map;
  */
 public class Country extends SearchableImp {
 
-    public static Map<String, Country> countries;
-    Logger LOG = LoggerFactory.getLogger(Country.class);
+    private static Map<String, Country> countries;
+    private Logger LOG = LoggerFactory.getLogger(Country.class);
     private String name;
 
     public Country(String name){
@@ -66,7 +66,7 @@ public class Country extends SearchableImp {
     public static Map<String, Country> getCountries(){
         if (countries == null){
             LoggerFactory.getLogger(Country.class).info("Searching for Country data...");
-            countries = new HashMap<String, Country>();
+            countries = new HashMap<>();
             Connexion connexion = Connexion.getInstance();
             Connection connection = connexion.getConnection();
 
