@@ -92,6 +92,10 @@ public class Display extends JFrame {
         return importSupplier;
     }
 
+    public JMenuItem getClear() {
+        return clear;
+    }
+
     public JMenuItem getQuit() {
         return quit;
     }

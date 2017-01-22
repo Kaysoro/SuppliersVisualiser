@@ -69,6 +69,7 @@ public class ImportControl implements ActionListener{
             display.getContentPane().removeAll();
             display.getContentPane().add(panel);
             display.getImportSupplier().setEnabled(false);
+            display.getClear().setEnabled(false);
             display.validate();
             display.repaint();
 
@@ -210,6 +211,7 @@ public class ImportControl implements ActionListener{
                     display.getContentPane().removeAll();
                     display.getContentPane().add(tab);
                     display.getImportSupplier().setEnabled(true);
+                    display.getClear().setEnabled(true);
                     display.validate();
                     display.repaint();
                 }
