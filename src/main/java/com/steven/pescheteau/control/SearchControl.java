@@ -43,7 +43,7 @@ public class SearchControl implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         // Create name for this tab and build the SQL request
-        StringBuilder title = new StringBuilder();
+        final StringBuilder title = new StringBuilder();
         final SQL sql = new SQL();
         Road road = new Road();
         sql.select()
@@ -227,6 +227,7 @@ public class SearchControl implements ActionListener {
                 NumberFormat nf = NumberFormat.getInstance();
                 panelResults.getTotalTruck().setText(nf.format(table.getTotalTruck()));
                 panelResults.getTotalSpend().setText(nf.format(table.getTotalSpend()));
+                panelResults.getExportExcel().addActionListener(new ExportControl(title.toString(), panelResults.getTable()));
 
                 // We remove all the columns not useful
                 if (supplierSelected && supplierSingleSelected)

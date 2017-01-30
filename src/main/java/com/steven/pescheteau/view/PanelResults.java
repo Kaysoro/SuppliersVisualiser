@@ -1,7 +1,5 @@
 package com.steven.pescheteau.view;
 
-import com.steven.pescheteau.control.ExportControl;
-
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -15,6 +13,7 @@ public class PanelResults extends JPanel {
     private JTable table;
     private JLabel totalTruck;
     private JLabel totalSpend;
+    private JButton exportExcel;
 
     public PanelResults(){
         super(new BorderLayout());
@@ -44,11 +43,10 @@ public class PanelResults extends JPanel {
         totalSpend = new JLabel("0");
         totalSpend.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
         total.add(totalSpend);
-        JButton exportExcel = new JButton(new ImageIcon(getClass().getResource("/com/steven/pescheteau/images/excel.png")));
+        exportExcel = new JButton(new ImageIcon(getClass().getResource("/com/steven/pescheteau/images/excel.png")));
         exportExcel.setToolTipText("Excel Exporting");
         exportExcel.setPreferredSize(new Dimension(20, 20));
         exportExcel.setFocusPainted(false);
-        exportExcel.addActionListener(new ExportControl());
         total.add(exportExcel);
         add(total, BorderLayout.SOUTH);
     }
@@ -63,5 +61,9 @@ public class PanelResults extends JPanel {
 
     public JLabel getTotalSpend() {
         return totalSpend;
+    }
+
+    public JButton getExportExcel() {
+        return exportExcel;
     }
 }
